@@ -1,0 +1,126 @@
+<form [formGroup]="formulario" class="form-horizontal" (ngSubmit)="onSubmit()">
+  <div class="form-group has-feedback" [ngClass]="aplicarCssErro('nome')">
+    <div class="col-sm-12">
+      <label for="nome" class="control-label">Nome</label>
+      <input type="text" class="form-control" id="nome" placeholder="Nome" formControlName="nome" />
+      <span class="glyphicon glyphicon-remove form-control-feedback" *ngIf="verificaCampo('nome')"></span>
+      <campo-control [mostrarErro]="!!verificaCampo('nome')" mensagemErro="Nome é obrigatório"></campo-control>
+    </div>
+  </div>
+
+  <div class="form-group has-feedback" [ngClass]="aplicarCssErro('email')">
+    <div class="col-sm-12">
+      <label for="email" class="control-label">E-Mail</label>
+      <input type="text" class="form-control" id="email" placeholder="E-Mail" formControlName="email" />
+      <span class="glyphicon glyphicon-remove form-control-feedback" *ngIf="verificaCampo('email')"></span>
+      <campo-control [mostrarErro]="verificaEmailInvalido()" mensagemErro="E-Mail é obrigatório"></campo-control>
+    </div>
+  </div>
+
+  <div formGroupName="endereco">
+    <div class="form-group has-feedback">
+      <div class="col-md-3" [ngClass]="aplicarCssErro('endereco.cep')">
+        <label for="cep" class="control-label">CEP</label>
+        <input type="text" class="form-control" id="cep" placeholder="CEP" formControlName="cep"
+          (blur)="consultaCep()" />
+        <span class="glyphicon glyphicon-remove form-control-feedback" *ngIf="verificaCampo('endereco.cep')"></span>
+        <campo-control [mostrarErro]="!!verificaCampo('endereco.cep')" mensagemErro="CEP é obrigatório"></campo-control>
+      </div>
+
+      <div class="col-md-3" [ngClass]="aplicarCssErro('endereco.numero')">
+        <label for="numero" class="control-label">Número</label>
+        <input type="text" class="form-control" id="numero" placeholder="Número" formControlName="numero" />
+        <span class="glyphicon glyphicon-remove form-control-feedback" *ngIf="verificaCampo('endereco.numero')"></span>
+        <campo-control [mostrarErro]="!!verificaCampo('endereco.numero')"
+          mensagemErro="Número é obrigatório"></campo-control>
+      </div>
+
+      <div class="col-sm-6">
+        <label for="complemento" class="control-label">Complemento</label>
+        <input type="text" class="form-control" id="complemento" placeholder="Complemento"
+          formControlName="complemento" />
+      </div>
+    </div>
+
+    <div class="form-group has-feedback">
+      <div class="col-sm-12" [ngClass]="aplicarCssErro('endereco.rua')">
+        <label for="rua" class="control-label">Rua</label>
+        <input type="text" class="form-control" id="rua" placeholder="Ex.: Rua São Paulo" formControlName="rua" />
+        <span class="glyphicon glyphicon-remove form-control-feedback" *ngIf="verificaCampo('endereco.rua')"></span>
+        <campo-control [mostrarErro]="!!verificaCampo('endereco.rua')" mensagemErro="Rua é obrigatório"></campo-control>
+      </div>
+    </div>
+
+    <div class="form-group has-feedback">
+      <div class="col-sm-5" [ngClass]="aplicarCssErro('endereco.bairro')">
+        <label for="bairro" class="control-label">Bairro</label>
+        <input type="text" class="form-control" id="bairro" placeholder="Bairro" formControlName="bairro" />
+        <span class="glyphicon glyphicon-remove form-control-feedback" *ngIf="verificaCampo('endereco.bairro')"></span>
+        <campo-control [mostrarErro]="!!verificaCampo('endereco.bairro')"
+          mensagemErro="Bairro é obrigatório"></campo-control>
+      </div>
+
+      <div class="col-sm-4" [ngClass]="aplicarCssErro('endereco.cidade')">
+        <label for="cidade" class="control-label">Cidade</label>
+        <input type="text" class="form-control" id="cidade" placeholder="Cidade" formControlName="cidade" />
+        <span class="glyphicon glyphicon-remove form-control-feedback" *ngIf="verificaCampo('endereco.cidade')"></span>
+        <campo-control [mostrarErro]="!!verificaCampo('endereco.cidade')"
+          mensagemErro="'Cidade é obrigatório'"></campo-control>
+      </div>
+
+      <div class="col-sm-3" [ngClass]="aplicarCssErro('endereco.estado')">
+        <label for="estado" class="control-label">Estado</label>
+        <select class="form-control" id="estado" formControlName="estado">
+          <option *ngFor="let estado of estados | async" [value]="estado.sigla">{{estado.nome}}</option>
+        </select>
+        <span class="glyphicon glyphicon-remove form-control-feedback" *ngIf="verificaCampo('endereco.estado')"></span>
+        <campo-control [mostrarErro]="!!verificaCampo('endereco.estado')"
+          mensagemErro="Estado é obrigatório"></campo-control>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+      <div class="col-sm-3">
+        <label for="cargo" class="control-label">Cargo</label>
+        <select class="form-control" id="cargo" formControlName="cargo" [compareWith]="compararCargo">
+          <option *ngFor="let cargo of cargos" [ngValue]="cargo">{{cargo.desc}}</option>
+        </select>
+      </div>
+      <div class="col-sm-3">
+        <label for="tecnologias" class="control-label">Tecnologias</label>
+        <select multiple class="form-control" id="tecnologias" formControlName="tecnologias">
+          <option *ngFor="let tecnologia of tecnologias" [value]="tecnologia.nome">{{tecnologia.descricao}}</option>
+        </select>
+      </div>
+      <div class="col-sm-3" [ngClass]="aplicarCssErro('newsletter')">
+        <label for="newsletter" class="control-label">Newsletter</label>
+        <div id="newsletter" class="row">
+          <div class="col-sm-4" *ngFor="let opcao of newsletterOp">
+            <label class="radio-inline">
+              <input type="radio" [value]="opcao.valor" formControlName="newsletter">{{opcao.desc}}
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3"></div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-3" [ngClass]="aplicarCssErro('termos')">
+      <div class="checkbox">
+        <label class="checkbox-inline">
+          <input type="checkbox" formControlName="termos">Aceitar os termos e condições
+        </label>
+        <span class="glyphicon glyphicon-remove form-control-feedback" *ngIf="verificaCampo('termos')"></span>
+        <campo-control [mostrarErro]="!!verificaCampo('termos')"
+          mensagemErro="Por favor, aceite os termos!"></campo-control>
+      </div>
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Entrar</button>
+  <button type="submit" class="btn" (click)="resetar()">Limpar</button>
+  <button  class="btn" (click)="setCargo()">Setar cargo</button>
+  <button  class="btn btn-info" (click)="setTecnologia()">Setar Tecnologias</button>
+</form>
+
+<app-form-debug [form]="formulario"></app-form-debug>

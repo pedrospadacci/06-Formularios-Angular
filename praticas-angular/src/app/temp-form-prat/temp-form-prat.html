@@ -1,0 +1,25 @@
+<form #f=ngForm (ngSubmit)="aoSubmeter(f)" class="form-horizontal">
+    <div class="form-group">
+        <label for="nome">Nome</label>
+        <input type="text" class="form-control" id="nome" name="nome"
+        [class.is-invalid]="!nome.valid && nome.touched"
+        placeholder="Nome" [ngModel]="pessoa.nome" required #nome="ngModel">
+    </div>
+    <div *ngIf="!nome.valid && nome.touched" >
+        Um nome é necessário
+    </div>
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="text" class="form-control" id="email" name="email"
+        [class.is-invalid]="!email.valid && email.touched"
+        placeholder="E-Mail" [ngModel]="pessoa.email" email required #email="ngModel">
+    </div>
+    <div *ngIf="!email.valid && email.touched" >
+        Um e-mail é necessário
+    </div>
+    <button [disabled]="!f.valid" type="submit" class="btn btn-primary">Entrar</button>
+</form>
+
+<div class="container">
+    <form-debug-pratica [formPrat]="f"></form-debug-pratica>
+</div>
