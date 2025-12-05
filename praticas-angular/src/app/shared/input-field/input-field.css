@@ -1,0 +1,12 @@
+/* Garante que o campo de input esteja acima do ícone de feedback */
+.form-group.has-feedback .form-control {
+  position: relative; /* 'position: relative' ou 'absolute' é necessário para que z-index funcione */
+  z-index: 2;         /* Define uma prioridade maior que o ícone */
+  background-color: transparent; /* Apenas para garantir que o background não esconda o ícone se o input for opaco */
+}
+
+/* Garante que o ícone de feedback permaneça abaixo do input, mas visível */
+.form-group.has-feedback .form-control-feedback {
+  z-index: 1;         /* Define uma prioridade menor que o input */
+  pointer-events: none; /* Isso permite que cliques "passem através" do ícone para o input abaixo, se necessário */
+}

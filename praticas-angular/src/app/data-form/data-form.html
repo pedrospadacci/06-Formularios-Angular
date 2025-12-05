@@ -1,0 +1,145 @@
+<form [formGroup]="formulario" class="form-horizontal" (ngSubmit)="onSubmit()">
+
+  <app-input-field formControlName="nome" class="col-sm-12" [classeCss]="aplicarCssErro('nome')"
+     id="nome" label="Nome" [control]="$any(formulario.get('nome'))"
+    [mostraIconeErro]="!!verificaCampo('nome')"
+     ></app-input-field>
+
+  <div class="form-group has-feedback" [ngClass]="aplicarCssErro('email')">
+    <div class="col-sm-12">
+      <label for="email" class="control-label">E-Mail</label>
+      <input type="text" class="form-control" id="email" placeholder="E-Mail" formControlName="email" />
+
+      <app-error-msg [control]="$any(formulario.get('email'))" label="Email"></app-error-msg>
+      <campo-control [mostrarErro]="!!verificaEmailInvalido()" mensagemErro="E-Mail inválido"></campo-control>
+      <campo-control [mostrarErro]="formulario.get('email')?.status === 'PENDING'" mensagemErro="Validando E-Mail..."></campo-control>
+      <campo-control [mostrarErro]="formulario.get('email')?.status === 'VALID'" mensagemErro="E-Mail válido"></campo-control>
+      <campo-control [mostrarErro]="!!formulario.get('email')?.hasError('emailInvalido')" mensagemErro="E-Mail já cadastrado"></campo-control>
+    </div>
+  </div>
+
+  <div class="form-group has-feedback" [ngClass]="aplicarCssErro('confirmarEmail')">
+    <div class="col-sm-12">
+      <label for="confirmarEmail" class="control-label">Confirmar E-Mail</label>
+      <input type="text" class="form-control" id="confirmarEmail" placeholder="Confirme o E-Mail" formControlName="confirmarEmail" />
+      <span class="glyphicon glyphicon-remove form-control-feedback" *ngIf="verificaCampo('confirmarEmail')"></span>
+      <app-error-msg [control]="$any(formulario.get('confirmarEmail'))" label="Confirmar E-Mail"></app-error-msg>
+    </div>
+  </div>
+
+  <div formGroupName="endereco">
+    <div class="form-group has-feedback">
+      <div class="col-md-3" [ngClass]="aplicarCssErro('endereco.cep')">
+        <label for="cep" class="control-label">CEP</label>
+        <input type="text" class="form-control" id="cep" placeholder="CEP" formControlName="cep"/>
+        <span class="glyphicon glyphicon-remove form-control-feedback" *ngIf="verificaCampo('endereco.cep')"></span>
+        <app-error-msg [control]="$any(formulario.get('endereco.cep'))" label="CEP"></app-error-msg>
+      </div>
+
+      <div class="col-md-3" [ngClass]="aplicarCssErro('endereco.numero')">
+        <label for="numero" class="control-label">Número</label>
+        <input type="text" class="form-control" id="numero" placeholder="Número" formControlName="numero" />
+        <span class="glyphicon glyphicon-remove form-control-feedback" *ngIf="verificaCampo('endereco.numero')"></span>
+        <app-error-msg [control]="$any(formulario.get('endereco.numero'))" label="Numero"></app-error-msg>
+      </div>
+
+      <div class="col-sm-6">
+        <label for="complemento" class="control-label">Complemento</label>
+        <input type="text" class="form-control" id="complemento" placeholder="Complemento"
+          formControlName="complemento" />
+      </div>
+    </div>
+
+    <div class="form-group has-feedback">
+      <div class="col-sm-12" [ngClass]="aplicarCssErro('endereco.rua')">
+        <label for="rua" class="control-label">Rua</label>
+        <input type="text" class="form-control" id="rua" placeholder="Ex.: Rua São Paulo" formControlName="rua" />
+        <span class="glyphicon glyphicon-remove form-control-feedback" *ngIf="verificaCampo('endereco.rua')"></span>
+        <app-error-msg [control]="$any(formulario.get('endereco.rua'))" label="Rua"></app-error-msg>
+      </div>
+    </div>
+
+    <div class="form-group has-feedback">
+      <div class="col-sm-5" [ngClass]="aplicarCssErro('endereco.bairro')">
+        <label for="bairro" class="control-label">Bairro</label>
+        <input type="text" class="form-control" id="bairro" placeholder="Bairro" formControlName="bairro" />
+        <span class="glyphicon glyphicon-remove form-control-feedback" *ngIf="verificaCampo('endereco.bairro')"></span>
+        <app-error-msg [control]="$any(formulario.get('endereco.bairro'))" label="Bairro"></app-error-msg>
+      </div>
+
+      <div class="col-sm-4" [ngClass]="aplicarCssErro('endereco.cidade')" >
+        <label for="cidade" class="control-label">Cidade</label>
+        <select class="form-control" id="cidade" formControlName="cidade">
+          <option *ngFor="let cidade of cidades" [value]="cidade.estado">{{cidade.nome}}</option>
+        </select>
+        <span class="glyphicon glyphicon-remove form-control-feedback" *ngIf="verificaCampo('endereco.cidade')"></span>
+        <app-error-msg [control]="$any(formulario.get('endereco.cidade'))" label="Cidade"></app-error-msg>
+      </div>
+
+      <div class="col-sm-3" [ngClass]="aplicarCssErro('endereco.estado')">
+        <label for="estado" class="control-label">Estado</label>
+        <select class="form-control" id="estado" formControlName="estado">
+          <option *ngFor="let estado of estados" [value]="estado.sigla">{{estado.nome}}</option>
+        </select>
+        <span class="glyphicon glyphicon-remove form-control-feedback" *ngIf="verificaCampo('endereco.estado')"></span>
+        <app-error-msg [control]="$any(formulario.get('endereco.estado'))" label="Estado"></app-error-msg>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+      <div class="col-sm-3">
+        <label for="cargo" class="control-label">Cargo</label>
+        <select class="form-control" id="cargo" formControlName="cargo" [compareWith]="compararCargo">
+          <option *ngFor="let cargo of cargos" [ngValue]="cargo">{{cargo.desc}}</option>
+        </select>
+      </div>
+      <div class="col-sm-3">
+        <label for="tecnologias" class="control-label">Tecnologias</label>
+        <select multiple class="form-control" id="tecnologias" formControlName="tecnologias">
+          <option *ngFor="let tecnologia of tecnologias" [value]="tecnologia.nome">{{tecnologia.descricao}}</option>
+        </select>
+      </div>
+      <div class="col-sm-3">
+        <label for="newsletter" class="control-label">Newsletter</label>
+        <div id="newsletter" class="row">
+          <div class="col-sm-4" *ngFor="let opcao of newsletterOp">
+            <label class="radio-inline">
+              <input type="radio" [value]="opcao.valor" formControlName="newsletter">{{opcao.desc}}
+            </label>
+          </div>
+        </div>
+      </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-3" [ngClass]="aplicarCssErro('termos')">
+      <div class="checkbox">
+        <label class="checkbox-inline">
+          <input type="checkbox" formControlName="termos">Aceito os termos
+        </label>
+        <span class="glyphicon glyphicon-remove form-control-feedback" *ngIf="verificaCampo('termos')"></span>
+        <app-error-msg [control]="$any(formulario.get('termos'))" label="Aceitos termos"></app-error-msg>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <label class="control-label">Frameworks:</label>
+        <div id="frameworks" class="row">
+          <div class="checkbox"
+                class="col-sm-3"
+                formArrayName="frameworks"
+                *ngFor="let item of getFrameworksControl() let i = index">
+            <label class="checkbox-inline">
+              <input type="checkbox"  [formControlName]="i">{{frameworks[i]}}
+            </label>
+        </div>
+        <span class="glyphicon glyphicon-remove form-control-feedback" *ngIf="verificaCampo('frameworks')"></span>
+        <app-error-msg [control]="$any(formulario.get('frameworks'))" label="Frameworks"></app-error-msg>
+      </div>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary">Entrar</button>
+  <button type="submit" class="btn" (click)="resetar()">Limpar</button>
+  <button  class="btn" (click)="setCargo()">Setar cargo</button>
+  <button  class="btn btn-info" (click)="setTecnologia()">Setar Tecnologias</button>
+</form>
+
+<app-form-debug [form]="formulario"></app-form-debug>

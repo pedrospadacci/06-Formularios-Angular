@@ -1,0 +1,7 @@
+<div class="form-group  has-feedback" [ngClass]="classeCss">
+  <label [attr.for]="id" class="control-label">{{label}}</label>
+  <input [type]="type" class="form-control"
+   [id]="id" [readOnly]="!!isReadOnly" [(ngModel)]="value" (blur)="onTouchedCb($event)"/>
+  <span class="glyphicon glyphicon-remove form-control-feedback" *ngIf="mostraIconeErro"></span>
+  <app-error-msg [control]="control" [label]="label"></app-error-msg>
+</div>

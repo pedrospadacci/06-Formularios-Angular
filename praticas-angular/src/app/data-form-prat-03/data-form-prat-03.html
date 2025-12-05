@@ -1,0 +1,129 @@
+<form [formGroup]="formuPrat03" class="form-horizontal" (ngSubmit)="sendForm()">
+  <div class="form-group has-feedback" [ngClass]="applyCssError('nome')">
+    <div class="col-sm-12">
+      <label for="" class="control-label">Nome</label>
+      <input type="text" class="form-control" id="nome" placeholder="nome" formControlName="nome">
+      <span class="glyphicon glyphicon-remove form-control-feedback" *ngIf="checkField('nome')"></span>
+      <campo-control [mostrarErro]="!!checkField('nome')" mensagemErro="Nome é obrigatório"></campo-control>
+    </div>
+  </div>
+  <div class="form-group has-feedback" [ngClass]="applyCssError('email')">
+    <div class="col-sm-12">
+      <label for="email" class="control-label">Email</label>
+      <input type="text" class="form-control" id="email" placeholder="E-mail" formControlName="email">
+      <span class="glyphicon glyphicon-remove form-control-feedback" *ngIf="checkField('email')"></span>
+      <campo-control [mostrarErro]="checkInvalidEmail()" mensagemErro="E-Mail é obrigatório"></campo-control>
+    </div>
+  </div>
+
+  <div formGroupName="endereco">
+    <div class="form-group has-feedback">
+      <div class="col-md-3" [ngClass]="applyCssError('endereco.cep')">
+        <label for="cep" class="control-label">CEP</label>
+        <input type="text" class="form-control" id="cep" placeholder="CEP" formControlName="cep">
+        <span class="glyphicon glyphicon-remove form-control-feedback" *ngIf="checkField('endereco.cep')"></span>
+        <campo-control [mostrarErro]="!!checkField('endereco.cep')" mensagemErro="CEP é obrigatório"></campo-control>
+      </div>
+
+      <div class="col-md-3" [ngClass]="applyCssError('endereco.numero')">
+        <label for="numero" class="control-label">Numero</label>
+        <input type="text" class="form-control" placeholder="Número" formControlName="numero">
+        <span class="glyphicon glyphicon-remove form-control-feedback"*ngIf="checkField('endereco.numero')"></span>
+        <campo-control [mostrarErro]="!!checkField('endereco.numero')" mensagemErro="Número é obrigatório"></campo-control>
+      </div>
+
+      <div class="col-sm-6">
+        <label for="complemento" class="control-label">Complemento</label>
+        <input type="text" class="form-control" placeholder="Ex.: Apartamento 603" formControlName="complemento">
+      </div>
+    </div>
+    <div class="form-group has-feedback">
+      <div class="col-sm-12" [ngClass]="applyCssError('endereco.rua')">
+        <label for="rua" class="control-label">Rua</label>
+        <input type="text" class="form-control" id="rua" placeholder="Ex.: Rua Madureiria" formControlName="rua">
+        <span class="glyphicon glyphicon-remove form-control-feedback" *ngIf="checkField('endereco.rua')"></span>
+        <campo-control [mostrarErro]="!!checkField('endereco.rua')" mensagemErro="Rua é obrigatória"></campo-control>
+      </div>
+    </div>
+    <div class="form-group has-feedback">
+      <div class="col-sm-5" [ngClass]="applyCssError('endereco.bairro')">
+        <label for="bairro" class="control-label">Bairro</label>
+        <input type="text" class="form-control" id="bairro" placeholder="Ex.: Bairro Jardins" formControlName="bairro">
+        <span class="glyphicon glyphicon-remove form-control-feedback" *ngIf="checkField('endereco.bairro')"></span>
+        <campo-control [mostrarErro]="!!checkField('endereco.bairro')" mensagemErro="Bairro é obrigatório"></campo-control>
+      </div>
+
+      <div class="col-sm-4" [ngClass]="applyCssError('endereco.cidade')">
+        <label for="cidade" class="control-label">Cidade</label>
+        <input type="text" class="form-control" id="cidade" placeholder="Cidade" formControlName="cidade">
+        <span class="glyphicon glyphicon-remove form-control-feedback" *ngIf="checkField('endereco.cidade')"></span>
+        <campo-control [mostrarErro]="!!checkField('endereco.cidade')" mensagemErro="Bairro é obrigatório"></campo-control>
+      </div>
+
+       <div class="col-sm-3" [ngClass]="applyCssError('endereco.estado')">
+        <label for="estado" class="control-label">Estado</label>
+        <select class="form-control" id="estado"  formControlName="estado">
+          <option *ngFor="let estado of estados |async"[value]="estado.sigla">{{estado.nome}}</option>
+        </select>
+        <span class="glyphicon glyphicon-remove form-control-feedback" *ngIf="checkField('endereco.estado')"></span>
+        <campo-control [mostrarErro]="!!checkField('endereco.estado')" mensagemErro="Estado é obrigatório"></campo-control>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-3">
+        <label for="cargo" class="control-label">Cargo</label>
+        <select class="form-control" id="cargo"  formControlName="cargo" [compareWith]="compararCargos">
+          <option *ngFor="let cargo of cargos"[ngValue]="cargo">{{cargo.desc}}</option>
+        </select>
+      </div>
+    <div class="col-sm-3">
+        <label for="tecnologias" class="control-label">Tecnologias</label>
+        <select multiple class="form-control" id="tecnologias"  formControlName="tecnologias">
+          <option *ngFor="let tecnologia of tecnologias"[value]="tecnologia.nome">{{tecnologia.descricao}}</option>
+        </select>
+      </div>
+    <div class="col-sm-3">
+      <label class="control-label">Newsletter</label>
+      <div id="newsletter" class="row">
+        <div class="col-sm-4" *ngFor="let opcao of newsletterOptions">
+          <label class="radio-inline">
+            <input type="radio" [value]="opcao.valor" formControlName="newsletter">{{opcao.desc}}
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-3">
+      <div id="checkbox">
+        <label for="" class="control-label">
+          <input type="checkbox" formControlName="termos">Aceitar os termos e condições
+        </label>
+        <span class="glyphicon glyphicon-remove form-control-feedback" *ngIf="checkField('termos')"></span>
+        <campo-control [mostrarErro]="!!checkField('termos')" mensagemErro="Por favor, preencha ests campo!"></campo-control>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <label class="control-label">Frameworks</label>
+        <div id="frameworks" class="row">
+          <div  class="checkbox"
+                class="col-sm-3"
+                formArrayName="frameworks"
+                *ngFor="let framework of getFrameworksControl() let i = index">
+              <label class="checkbox-inline">
+                <input type="checkbox" [formControlName]="i">{{frameworks[i]}}
+              </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary">Entrar</button>
+  <button type="submit" class="btn" (click)="limparForm()">Limpar</button>
+  <button type="submit" class="btn" (click)="setarCargo()">Botar Cargo</button>
+  <button type="submit" class="btn btn-warning" (click)="setarTecnologias()">Botar Tecnologia</button>
+</form>
+
+<app-form-debug [form]="formuPrat03"></app-form-debug>
+
+
